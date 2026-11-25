@@ -118,7 +118,8 @@ def run_praat_script(praat_bin, cwd: Path, script_content: str):
         text=True,
         check=False,
     )
-    if result.returncode != 0 and "FULL-TRUST" in result.stderr and "Unknown" in result.stderr:
+    combined = (result.stdout + "\n" + result.stderr).lower()
+    if result.returncode != 0 and ("unrecognized" in combined or "unknown" in combined):
         cmd = [praat_bin, "--run", "runner.praat"]
         result = subprocess.run(
             cmd,
